@@ -1,23 +1,20 @@
 <!DOCTYPE html>
 <html>
-<body style="display: flex; flex-direction:column; justify-content:center; align-items:center; ">
-<button onclick="geoFence()">Start GeoFencing</button>
-<p>OUTPUT STATUS:</p>
-<div id="output" style="border-radius:4px; border: 2px solid black; padding:2px;"></div>
-&nbsp;
-<p>LOCATION CORDINATES:</p>
-<div id="location" style="border-radius:4px; border: 2px solid black; padding:2px;"></div>
-&nbsp; <!-- Add a div to display location -->
-<script>
+    <body style="display: flex; flex-direction:column; justify-content:center; align-items:center; ">
+        <button onclick="geoFence()">Start GeoFencing</button>
+        <p>OUTPUT STATUS:</p>
+        <div id="output" style="border-radius:4px; border: 2px solid black; padding:2px;"></div>
+        &nbsp;
+        <p>LOCATION CORDINATES:</p>
+        <div id="location" style="border-radius:4px; border: 2px solid black; padding:2px;"></div>
+        &nbsp; <!-- Add a div to display location -->
+        
+<script defer>
 var watchID;
 var geoLoc;
-// Our boundaries
-let boundaryCoordinates = {
-    top_left: [15.351859, 75.082680],
-    bottom_left: [15.352097, 75.082663],
-    top_right: [15.351830, 75.082510],
-    bottom_right: [15.352081, 75.082491]
-};
+// Our boundary points
+let lhsBoundary = [15.352708,75.081763]; // [latitude, longitude] for the left boundary point
+let rhsBoundary = [15.352670,75.081829]; // [latitude, longitude] for the right boundary point
 // Start monitoring location
 function geoFence() {
     if (navigator.geolocation) {
@@ -34,16 +31,27 @@ function showLocation(position) {
     var longitude = position.coords.longitude;
     // Update location display
     document.getElementById('location').innerHTML = 'Latitude: ' + latitude + ', Longitude: ' + longitude;
-    // Check if we are within the rectangle
-    if (latitude >= boundaryCoordinates.bottom_left[0] && latitude <= boundaryCoordinates.top_left[0] &&
-    longitude >= boundaryCoordinates.bottom_left[1] && longitude <= boundaryCoordinates.bottom_right[1]) {
-    // We are within the rectangle
-    document.getElementById('output').innerHTML = 'Inside the geofence!';
-} else {
-    // We are outside the rectangle
-    document.getElementById('output').innerHTML = 'Outside the geofence!';
+    // Check if we crossed the boundary line
+    if (isCrossingLine(lhsBoundary, rhsBoundary, latitude, longitude)) {
+        document.getElementById('output').innerHTML = 'Crossed the boundary line!';
+    }else{
+        document.getElementById('output').innerHTML = 'outside the boundary line!';
+    }
 }
+// Function to check if the user's location is crossing the line defined by two points
+function isCrossingLine(point1, point2, lat, long) {
+    // Check if latitude is within the range of the two points' latitudes
+    var minLat = Math.min(point1[0], point2[0]);
+    var maxLat = Math.max(point1[0], point2[0]);
+    var withinLatRange = (lat >= minLat && lat <= maxLat);
 
+    // Check if longitude is within the range of the two points' longitudes
+    var minLong = Math.min(point1[1], point2[1]);
+    var maxLong = Math.max(point1[1], point2[1]);
+    var withinLongRange = (long >= minLong && long <= maxLong);
+
+    // Return true if both latitude and longitude are within the range
+    return (withinLatRange && withinLongRange);
 }
 // Handling errors
 function errorHandler(err) {
