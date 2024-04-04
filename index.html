@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<body>
+<button onclick="geoFence()">Start GeoFencing</button>
+<div id="output"></div>
+<script>
+var watchID;
+var geoLoc;
+// Our boundaries
+let boundaryCoordinates = {
+    top_left: [15.351859,75.082680],
+    bottom_left: [15.352097,75.082663],
+    top_right: [15.351830,75.082510],
+    bottom_right: [15.352081,75.082491]
+};
+// Start monitoring location
+function geoFence() {
+    if (navigator.geolocation) {
+        var options = {enableHighAccuracy: true};
+        geoLoc = navigator.geolocation;
+        watchID = geoLoc.watchPosition(showLocation, errorHandler, options);
+        // Disable the button to prevent multiple clicks
+        document.querySelector("button").disabled = true;
+    }
+}
+// Showing Location
+function showLocation(position) {
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
+    // Check if we are within the rectangle
+    if (latitude >= boundaryCoordinates.bottom_left[0] && latitude <= boundaryCoordinates.top_left[0]) {
+        if (longitude >= boundaryCoordinates.bottom_left[1] && longitude <= boundaryCoordinates.bottom_right[1]) {
+            // We are within the rectangle
+            document.getElementById('output').innerHTML = 'Inside the geofence!';
+        } else {
+            // We are outside the rectangle
+            alert('You have left the geo-fenced area!');
+        }
+    } else {
+        // We are outside the rectangle
+        alert('You have left the geo-fenced area!');
+    }
+}
+// Handling errors
+function errorHandler(err) {
+    if (err.code == 1) {
+        alert("Error: Access is denied!");
+    } else if (err.code == 2) {
+        alert("Error: Position is unavailable!");
+    }
+}
+</script>
+</body>
+</html>
