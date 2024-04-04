@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html>
-<body>
+<body style="display: flex; flex-direction:column; justify-content:center; align-items:center; ">
 <button onclick="geoFence()">Start GeoFencing</button>
-<div id="output"></div>
-<div id="location"></div> <!-- Add a div to display location -->
+<p>OUTPUT STATUS:</p>
+<div id="output" style="border-radius:4px; border: 2px solid black; padding:2px;"></div>
+&nbsp;
+<p>LOCATION CORDINATES:</p>
+<div id="location" style="border-radius:4px; border: 2px solid black; padding:2px;"></div>
+&nbsp; <!-- Add a div to display location -->
 <script>
 var watchID;
 var geoLoc;
