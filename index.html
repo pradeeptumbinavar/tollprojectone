@@ -34,9 +34,7 @@ function showLocation(position) {
     // Check if we crossed the boundary line
     if (isCrossingLine(lhsBoundary, rhsBoundary, latitude, longitude)) {
         document.getElementById('output').innerHTML = 'Crossed the boundary line!';
-    }else{
-        document.getElementById('output').innerHTML = 'outside the boundary line!';
-    }
+    }                   
 }
 // Function to check if the user's location is crossing the line defined by two points
 function isCrossingLine(point1, point2, lat, long) {
