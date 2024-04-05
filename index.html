@@ -17,6 +17,9 @@ var geoLoc;
 var prevLatitude = null;
 var prevLongitude = null;
 var totalDistance = 0; // Total distance traveled
+// Our boundary points
+let lhsBoundary = [15.348419,75.135350]; // [latitude, longitude] for the left boundary point
+let rhsBoundary = [15.348323,75.135365]; // [latitude, longitude] for the right boundary point
 // Start monitoring location
 function geoFence() {
     if (navigator.geolocation) {
