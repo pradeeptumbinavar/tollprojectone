@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
     <body style="display: flex; flex-direction:column; justify-content:center; align-items:center; ">
-        <button onclick="geoFence()">Start GeoFencing</button>
-        <p>OUTPUT STATUS:</p>
+        <button onclick="geoFence()">BEGIN TRACKING✅</button>
+        <p>STATUS ⚠️</p>
         <div id="output" style="border-radius:4px; border: 2px solid black; padding:2px;"></div>
         &nbsp;
-        <p>LOCATION CORDINATES:</p>
+        <p>LIVE CORDINATES 📍</p>
         <div id="location" style="border-radius:4px; border: 2px solid black; padding:2px;"></div>
         &nbsp; <!-- Add a div to display location -->
         <p>DISTANCE TRAVELED:</p>
@@ -54,12 +54,12 @@ function showLocation(position) {
     
     // Check if we crossed the start line
     if (isCrossingLine(startLineLHS, startLineRHS, latitude, longitude)) {
-        document.getElementById('output').innerHTML = 'Crossed the start line!';
+        document.getElementById('output').innerHTML = 'Crossed the start line! 🏁';
     }                   
 
     // Check if we crossed the finish line
     if (isCrossingLine(finishLineLHS, finishLineRHS, latitude, longitude)) {
-        document.getElementById('output').innerHTML = 'Crossed the finish line!';
+        document.getElementById('output').innerHTML = 'Crossed the finish line!🛑';
         // Stop monitoring location
         stopGeoFence();
     }
