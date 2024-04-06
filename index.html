@@ -17,9 +17,13 @@ var geoLoc;
 var prevLatitude = null;
 var prevLongitude = null;
 var totalDistance = 0; // Total distance traveled
-// Our boundary points
-let lhsBoundary = [15.348419,75.135350]; // [latitude, longitude] for the left boundary point
-let rhsBoundary = [15.348323,75.135365]; // [latitude, longitude] for the right boundary point
+
+// Start and finish line boundaries
+let startLineLHS = [15.351520,75.082336]; // Start line left boundary
+let startLineRHS = [15.351476,75.082070]; // Start line right boundary
+let finishLineLHS = [15.350842,75.082478];//finsih line left boundary
+let finishLineRHS = [15.350787,75.082135];//finish line right boundary
+
 // Start monitoring location
 function geoFence() {
     if (navigator.geolocation) {
@@ -30,12 +34,14 @@ function geoFence() {
         document.querySelector("button").disabled = true;
     }
 }
+
 // Showing Location
 function showLocation(position) {
     var latitude = position.coords.latitude;
     var longitude = position.coords.longitude;
     // Update location display
     document.getElementById('location').innerHTML = 'Latitude: ' + latitude + ', Longitude: ' + longitude;
+    
     // Calculate distance traveled
     if (prevLatitude !== null && prevLongitude !== null) {
         var distance = calculateDistance(prevLatitude, prevLongitude, latitude, longitude);
@@ -45,11 +51,20 @@ function showLocation(position) {
     // Update previous coordinates
     prevLatitude = latitude;
     prevLongitude = longitude;
-    // Check if we crossed the boundary line
-    if (isCrossingLine(lhsBoundary, rhsBoundary, latitude, longitude)) {
-        document.getElementById('output').innerHTML = 'Crossed the boundary line!';
+    
+    // Check if we crossed the start line
+    if (isCrossingLine(startLineLHS, startLineRHS, latitude, longitude)) {
+        document.getElementById('output').innerHTML = 'Crossed the start line!';
     }                   
+
+    // Check if we crossed the finish line
+    if (isCrossingLine(finishLineLHS, finishLineRHS, latitude, longitude)) {
+        document.getElementById('output').innerHTML = 'Crossed the finish line!';
+        // Stop monitoring location
+        stopGeoFence();
+    }
 }
+
 // Function to calculate distance between two coordinates using Haversine formula
 function calculateDistance(lat1, lon1, lat2, lon2) {
     var R = 6371e3; // Earth radius in meters
@@ -66,6 +81,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     var distance = R * c; // Distance in meters
     return distance;
 }
+
 // Function to check if the user's location is crossing the line defined by two points
 function isCrossingLine(point1, point2, lat, long) {
     // Check if latitude is within the range of the two points' latitudes
@@ -81,6 +97,14 @@ function isCrossingLine(point1, point2, lat, long) {
     // Return true if both latitude and longitude are within the range
     return (withinLatRange && withinLongRange);
 }
+
+// Stop monitoring location
+function stopGeoFence() {
+    if (geoLoc) {
+        geoLoc.clearWatch(watchID);
+    }
+}
+
 // Handling errors
 function errorHandler(err) {
     if (err.code == 1) {
